@@ -22,3 +22,8 @@ source .venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+
+4. Export Token for AOC:
+```bash
+export AOC_SESSION=
+```
