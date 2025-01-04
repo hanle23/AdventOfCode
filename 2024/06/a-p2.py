@@ -41,4 +41,7 @@ while flag:
     else:
         currentPosition = nextPosition
 
+possiblePlacement = set()
+# All possible placement can be in any direction of any visited point
+# No need to try all possible location in the map
 print(len(visited))
