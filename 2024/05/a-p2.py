@@ -22,19 +22,42 @@ for rule in rules:
     else:
         rulesBook[int(rule[1])] = set([int(rule[0])])
 
+def checkValid(pages):
+    disallowed = set()
+    for page in pages:
+        currPage = int(page)
+        if currPage in disallowed:
+            return False
+        if currPage not in rulesBook:
+            continue
+        disallowed |= rulesBook[currPage]
+    return True
+
+def modifyPage(pages):
+    copy = pages
+    while not checkValid(copy):
+        disallowed = set()
+        for index in range(0, len(copy)):
+            currPage = int(copy[index])
+            if currPage not in rulesBook:
+                continue
+            disallowed |= rulesBook[currPage]
+            flag = True
+            for sIndex in range(index, len(copy)):
+                if int(copy[sIndex]) in disallowed:
+                    copy[index], copy[sIndex] = copy[sIndex], copy[index]
+                    flag = False
+                    break
+            if not flag:
+                break
+    return copy
+
 sum = 0
 for update in updates:
     curr = update.split(",")
-    disallowed = set()
-    flag = True
-    for page in curr:
-        currPage = int(page)
-        if currPage in disallowed:
-            flag = False
-            break
-        disallowed = disallowed.union(rulesBook[currPage])
-    if not flag:
-        continue
-
+    isValid = checkValid(curr)
+    if not isValid:
+        newPage = modifyPage(curr)
+        sum += int(newPage[len(newPage) // 2])
 
 print(sum)

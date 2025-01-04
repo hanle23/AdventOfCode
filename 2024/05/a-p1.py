@@ -22,18 +22,20 @@ for rule in rules:
     else:
         rulesBook[int(rule[1])] = set([int(rule[0])])
 
+def checkValid(pages):
+    disallowed = set()
+    for page in pages:
+        currPage = int(page)
+        if currPage in disallowed:
+            return False
+        disallowed |= rulesBook[currPage]
+    return True
+
 sum = 0
 for update in updates:
     curr = update.split(",")
-    disallowed = set()
-    flag = True
-    for page in curr:
-        currPage = int(page)
-        if currPage in disallowed:
-            flag = False
-            break
-        disallowed = disallowed.union(rulesBook[currPage])
-    if not flag:
+    isValid = checkValid(curr)
+    if not isValid:
         continue
     sum += int(curr[len(curr) // 2])
 
