@@ -2,20 +2,21 @@
 from sys import argv
 import time
 from aocd import get_data
-data = get_data(day=6, year=2024)
-data = '''....#.....
-.........#
-..........
-..#.......
-.......#..
-..........
-.#..^.....
-........#.
-#.........
-......#...'''
-map = data.splitlines()
-
 t_start = time.process_time()
+data = get_data(day=6, year=2024)
+# data = '''....#.....
+# .........#
+# ..........
+# ..#.......
+# .......#..
+# ..........
+# .#..^.....
+# ........#.
+# #.........
+# ......#...'''
+map = data.splitlines()
+print(f"reading data: {(time.process_time()-t_start)*1000:.3F} ms")
+
 
 directions = [(0,-1), (1,0), (0,1), (-1,0)]
 DIRECTIONS = {
@@ -25,7 +26,7 @@ DIRECTIONS = {
     "<": 0
 }
 
-print(f"reading data: {(time.process_time()-t_start)*1000:.3F} ms")
+
 t_lap = time.process_time()
 
 WIDTH, HEIGHT = (len(map[0]), len(map))
@@ -69,9 +70,10 @@ print(f"walking path: {(time.process_time()-t_lap)*1000:.3F} ms")
 print(f"path has {len(orig_path)} steps on {len(orig_visited)} unique nodes")
 
 loop_obstacles = set()
-for index, pos in enumerate(orig_path[1:],1):
+non_loop_obstacles = set()
+for index, pos in enumerate(orig_path[1:], 1):
     width, height = (pos[0], pos[1])
-    if (width, height) in loop_obstacles:
+    if (width, height) in loop_obstacles or (width, height) in non_loop_obstacles:
         continue
     for sides in range(len(directions)):
         prev = (width - directions[sides][0], height - directions[sides][1], sides)
@@ -81,7 +83,9 @@ for index, pos in enumerate(orig_path[1:],1):
     while cur != (-1,-1,-1) and cur not in visited:
         visited.add(cur)
         cur = neighbor[cur]
-    if cur != (-1,-1,-1):
+    if cur == (-1,-1,-1):
+        non_loop_obstacles.add((pos[0], pos[1]))
+    else:
         loop_obstacles.add((pos[0],pos[1]))
     for sides in range(len(directions)):
         prev = (width - directions[sides][0], height - directions[sides][1], sides)
