@@ -27,3 +27,12 @@ pip install -r requirements.txt
 ```bash
 export AOC_SESSION=
 ```
+
+5. Run solution for specific day:
+```bash
+# All part
+python3 run.py --year 2024 --day 5
+
+# Specific part
+python3 run.py --year 2024 --day 5 --part 1
+```
